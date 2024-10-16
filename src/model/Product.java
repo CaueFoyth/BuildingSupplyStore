@@ -11,11 +11,20 @@ public class Product {
         this.price = price;
     }
 
-    public int getCode() { return code; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
+    public int getCode() { 
+        return this.code; 
+    }
+    
+    public String getDescription() { 
+        return this.description; 
+    }
+    
+    public double getPrice() { 
+        return this.price; 
+    }
 
+    @Override
     public String toString() {
-        return "Código: " + code + ", Descrição: " + description + ", Preço: " + price;
+        return "Código: " + code + ", Descrição: " + description + ", Preço: R$" + price;
     }
 }

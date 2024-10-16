@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Sale {
@@ -15,11 +16,15 @@ public class Sale {
         this.date = date;
     }
 
-    public String toString() {
-        return "Data: " + date + ", Código do Produto: " + productCode + ", Quantidade: " + quantity + ", Valor Total: " + totalValue;
-    }
-
     public double getTotalValue() {
         return totalValue;
+    }
+
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return "Data: " + dateFormat.format(date) + 
+               ", Código do Produto: " + productCode + 
+               ", Quantidade: " + quantity + 
+               ", Valor Total: R$" + totalValue;
     }
 }

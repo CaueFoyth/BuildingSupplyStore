@@ -1,59 +1,86 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Stock {
-    private List<Product> products = new ArrayList<>();
-    private Map<Integer, Integer> stock = new HashMap<>();
-    private List<Sale> sales = new ArrayList<>();
+    private ArrayList<Product> products = new ArrayList<>();
+    private ArrayList<Integer> stockQuantities = new ArrayList<>();
+    private ArrayList<Sale> sales = new ArrayList<>();
 
     public void addProduct(Product product) {
         products.add(product);
-        stock.put(product.getCode(), 0);
+        stockQuantities.add(0);
     }
 
     public void updateStock(int code, int qty) {
-        stock.put(code, stock.getOrDefault(code, 0) + qty);
+        int index = findProductIndex(code);
+        if (index != -1) {
+            int newQuantity = stockQuantities.get(index) + qty;
+            stockQuantities.set(index, newQuantity);
+        }
     }
 
     public boolean sellProduct(int code, int qty) {
-        if (stock.getOrDefault(code, 0) >= qty) {
-            stock.put(code, stock.get(code) - qty);
+        int index = findProductIndex(code);
+        if (index != -1 && stockQuantities.get(index) >= qty) {
+            stockQuantities.set(index, stockQuantities.get(index) - qty);
             return true;
         }
         return false;
     }
 
-    public List<Product> listProducts() {
+    public ArrayList<Product> listProducts() {
         return products;
     }
 
-    public List<Product> listAvailableStock() {
-        List<Product> available = new ArrayList<>();
-        for (Product product : products) {
-            if (stock.getOrDefault(product.getCode(), 0) > 0) {
-                available.add(product);
+    public ArrayList<Product> listAvailableStock() {
+        ArrayList<Product> available = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            if (stockQuantities.get(i) > 0) {
+                available.add(products.get(i));
             }
         }
         return available;
     }
 
     public double getProductPrice(int code) {
-        return products.stream().filter(p -> p.getCode() == code).findFirst().orElse(null).getPrice();
+        int index = findProductIndex(code);
+        if (index != -1) {
+            return products.get(index).getPrice();
+        }
+        return 0.0;
     }
 
     public void addSale(Sale sale) {
         sales.add(sale);
     }
 
-    public List<Sale> listSales() {
+    public ArrayList<Sale> listSales() {
         return sales;
     }
 
     public double calculateTotalSales() {
-        return sales.stream().mapToDouble(Sale::getTotalValue).sum();
+        double total = 0;
+        for (Sale sale : sales) {
+            total += sale.getTotalValue();
+        }
+        return total;
+    }
+
+    private int findProductIndex(int code) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getCode() == code) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getProductQuantity(int code) {
+        int index = findProductIndex(code);
+        if (index != -1) {
+            return stockQuantities.get(index);
+        }
+        return 0;
     }
 }

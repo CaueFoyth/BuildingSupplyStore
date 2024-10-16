@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import model.Product;
 import model.Sale;
+import model.Stock;
 
 import java.util.List;
 
@@ -38,13 +39,20 @@ public class InputOutput {
         JOptionPane.showMessageDialog(null, output.toString());
     }
 
-    public static void showStock(List<Product> products) {
+    public static void showStock(Stock stock) {
+        List<Product> products = stock.listProducts();
         StringBuilder output = new StringBuilder("Produtos em estoque:\n");
         for (Product product : products) {
-            output.append(product).append("\n");
+            int quantity = stock.getProductQuantity(product.getCode());
+            output.append("Código: ").append(product.getCode())
+                  .append(", Descrição: ").append(product.getDescription())
+                  .append(", Preço: ").append(product.getPrice())
+                  .append(", Quantidade: ").append(quantity)
+                  .append("\n");
         }
         JOptionPane.showMessageDialog(null, output.toString());
     }
+    
 
     public static void showSales(List<Sale> sales) {
         StringBuilder output = new StringBuilder("Cupons de Venda:\n");
